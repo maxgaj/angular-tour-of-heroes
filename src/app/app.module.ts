@@ -1,41 +1,31 @@
-import {BrowserModule} from '@angular/platform-browser';
 import {NgModule} from '@angular/core';
-import {FormsModule} from '@angular/forms';
-import {HttpClientModule} from '@angular/common/http';
-import {HttpClientInMemoryWebApiModule} from 'angular-in-memory-web-api';
+import {RouterModule, Routes} from '@angular/router';
+
 import {AppComponent} from './app.component';
 
-import {HeroesComponent} from './heroes/heroes.component';
-import {HeroDetailComponent} from './hero-detail/hero-detail.component';
-import {MessagesComponent} from './messages/messages.component';
-import {AppRoutingModule} from './app-routing.module';
-import {DashboardComponent} from './dashboard/dashboard.component';
-import {InMemoryDataService} from './in-memory-data.service';
-import { HeroSearchComponent } from './hero-search/hero-search.component';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import {HeroesModule} from './heroes/heroes.module';
+import {CoreModule} from './core/core.module';
+import {DashboardModule} from './dashboard/dashboard.module';
+import {MessagesModule} from './messages/messages.module';
+import {CommonModule} from '@angular/common';
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import {MatButtonModule, MatToolbarModule} from '@angular/material';
 
-import {
-  MatToolbarModule,
-  MatButtonModule
-} from '@angular/material';
+const routes: Routes = [
+  {path: '', redirectTo: '/dashboard', pathMatch: 'full'}
+];
 
 @NgModule({
   declarations: [
-    AppComponent,
-    HeroesComponent,
-    HeroDetailComponent,
-    MessagesComponent,
-    DashboardComponent,
-    HeroSearchComponent
+    AppComponent
   ],
   imports: [
-    BrowserModule,
-    FormsModule,
-    AppRoutingModule,
-    HttpClientModule,
-    HttpClientInMemoryWebApiModule.forRoot(
-      InMemoryDataService, {dataEncapsulation: false}
-    ),
+    RouterModule.forRoot(routes),
+    CoreModule,
+    HeroesModule,
+    DashboardModule,
+    MessagesModule,
+    CommonModule,
     BrowserAnimationsModule,
     MatToolbarModule,
     MatButtonModule

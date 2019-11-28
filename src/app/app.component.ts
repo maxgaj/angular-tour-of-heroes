@@ -2,8 +2,8 @@ import {Component, OnInit} from '@angular/core';
 import {fromEvent, merge} from 'rxjs';
 import {filter, map, mergeMapTo, switchMapTo, takeUntil, tap} from 'rxjs/operators';
 
-import {HeroService} from './hero.service';
-import {Hero} from './hero';
+import {HeroService} from './core/hero.service';
+import {Hero} from './core/hero';
 
 @Component({
   selector: 'app-root',
