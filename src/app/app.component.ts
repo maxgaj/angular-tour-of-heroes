@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {fromEvent} from 'rxjs';
+import {fromEvent, merge} from 'rxjs';
 import {filter, map, mergeMapTo, switchMapTo, takeUntil, tap} from 'rxjs/operators';
 
 import {HeroService} from './hero.service';
@@ -57,7 +57,7 @@ export class AppComponent implements OnInit {
     // this.keyboardUp$.subscribe(event => console.log(event));
     // this.keyboardDown$.subscribe(event => console.log(event));
 
-    this.keyboardUpAndDown$ = this.keyboardUp$.merge(this.keyboardDown$);
+    this.keyboardUpAndDown$ = merge(this.keyboardUp$, this.keyboardDown$);
     this.keyboardUpAndDown$.subscribe(event => console.log(event));
 
   }
