@@ -6,5 +6,19 @@
 </mat-toolbar>
 
 <router-outlet></router-outlet>
+
+<div *ngIf="pointerPosition$ | async as pointerPosition; else loadingTemplate">
+  <p>
+    Position = {{pointerPosition.x}}px on the X axis and
+    {{pointerPosition.y}}px on the Y axis
+  </p>
+</div>
+
+<ng-template #loadingTemplate>
+  Waiting for first mousedrag...
+</ng-template>
+
+<p>{{ keyboardUp$ }}</p>
+
 <app-messages></app-messages>
 

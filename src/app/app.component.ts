@@ -1,7 +1,9 @@
 import {Component, OnInit} from '@angular/core';
 import {fromEvent} from 'rxjs';
-import {map, mergeMapTo, takeUntil, tap} from 'rxjs/operators';
-import {log} from 'util';
+import {filter, map, mergeMapTo, switchMapTo, takeUntil, tap} from 'rxjs/operators';
+
+import {HeroService} from './hero.service';
+import {Hero} from './hero';
 
 @Component({
   selector: 'app-root',
@@ -10,20 +12,53 @@ import {log} from 'util';
 })
 export class AppComponent implements OnInit {
   title = 'Tour of Heroes';
+  pointerPosition$;
+
+  keyboardAction$;
+  keyboardUp$;
+  keyboardDown$;
+  keyboardUpAndDown$;
+
+
+  constructor(private heroService: HeroService) {
+  }
 
   ngOnInit(): void {
-    const mouseDrag$ = fromEvent<MouseEvent>(document, 'mousedown').pipe(
+    this.pointerPosition$ = fromEvent<MouseEvent>(document, 'mousedown').pipe(
       mergeMapTo(
         fromEvent<MouseEvent>(document, 'mousemove').pipe(
           takeUntil(fromEvent<MouseEvent>(document, 'mouseup'))
         )
       )
+    ).pipe(
+      tap(event => console.log(event)),
+      map(event => ({
+        x: event.clientX,
+        y: event.clientY
+      }))
     );
 
-    mouseDrag$.pipe(
-        tap(event => console.log(event)),
-        map((event) => `Position = ${event.clientX}px on the X axis and ${event.clientY}px on the Y axis`)
-      )
-      .subscribe(event => console.log(event));
+    this.keyboardAction$ = fromEvent<KeyboardEvent>(document, 'keydown');
+
+    this.keyboardUp$ = this.keyboardAction$.pipe(
+      filter((event: KeyboardEvent) => event.key === 'ArrowUp'),
+      switchMapTo(this.heroService.getHeroes()),
+      map(heroes => heroes[0]),
+      map((hero: Hero) => hero.name)
+    );
+
+    this.keyboardDown$ = this.keyboardAction$.pipe(
+      filter((event: KeyboardEvent) => event.key === 'ArrowDown'),
+      switchMapTo(this.heroService.getHeroes()),
+      map((heroes: Hero[]) => heroes[heroes.length - 1]),
+      map((hero: Hero) => hero.name)
+    );
+
+    // this.keyboardUp$.subscribe(event => console.log(event));
+    // this.keyboardDown$.subscribe(event => console.log(event));
+
+    this.keyboardUpAndDown$ = this.keyboardUp$.merge(this.keyboardDown$);
+    this.keyboardUpAndDown$.subscribe(event => console.log(event));
+
   }
 }

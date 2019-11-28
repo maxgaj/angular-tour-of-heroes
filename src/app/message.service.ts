@@ -1,4 +1,5 @@
 import {Injectable} from '@angular/core';
+import {LoggerService} from './logger.service';
 
 @Injectable({
   providedIn: 'root'
@@ -6,14 +7,16 @@ import {Injectable} from '@angular/core';
 export class MessageService {
   messages: string[] = [];
 
-  constructor() {
+  constructor(private loggerService: LoggerService) {
   }
 
   add(message: string) {
     this.messages.push(message);
+    this.loggerService.log(message);
   }
 
   clear(): void {
     this.messages = [];
+    this.loggerService.log('cleared');
   }
 }

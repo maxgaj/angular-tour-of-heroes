@@ -3,17 +3,18 @@
 <div>
   <label>
     Hero name:
-    <input #heroName />
+    <input id="heroNameInput" #heroName />
   </label>
-  <button (click)="add(heroName.value); heroName.value=''">Add</button>
+  <button id="heroAddButton" (click)="add(heroName.value); heroName.value=''">Add</button>
 </div>
 
 <ul class="heroes">
   <li *ngFor="let hero of heroes">
     <a routerLink="/detail/{{hero.id}}">
-      <span class="badge">{{hero.id}}</span> {{hero.name}}
+      <span class="badge">{{hero.id}}</span>
+      <span class="hero-name">{{hero.name}}</span>
     </a>
-    <button class="delete" title="delete hero"
+    <button class="delete" title="delete {{hero.name}}"
             (click)="delete(hero)">
       x
     </button>
