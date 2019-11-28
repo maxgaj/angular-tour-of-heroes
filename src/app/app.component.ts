@@ -13,12 +13,7 @@ import {Hero} from './hero';
 export class AppComponent implements OnInit {
   title = 'Tour of Heroes';
   pointerPosition$;
-
-  keyboardAction$;
-  keyboardUp$;
-  keyboardDown$;
   keyboardUpAndDown$;
-
 
   constructor(private heroService: HeroService) {
   }
@@ -38,26 +33,24 @@ export class AppComponent implements OnInit {
       }))
     );
 
-    this.keyboardAction$ = fromEvent<KeyboardEvent>(document, 'keydown');
+    const keyboardAction$ = fromEvent<KeyboardEvent>(document, 'keydown');
 
-    this.keyboardUp$ = this.keyboardAction$.pipe(
+    const keyboardUp$ = keyboardAction$.pipe(
       filter((event: KeyboardEvent) => event.key === 'ArrowUp'),
       switchMapTo(this.heroService.getHeroes()),
       map(heroes => heroes[0]),
       map((hero: Hero) => hero.name)
     );
 
-    this.keyboardDown$ = this.keyboardAction$.pipe(
+    const keyboardDown$ = keyboardAction$.pipe(
       filter((event: KeyboardEvent) => event.key === 'ArrowDown'),
       switchMapTo(this.heroService.getHeroes()),
       map((heroes: Hero[]) => heroes[heroes.length - 1]),
       map((hero: Hero) => hero.name)
     );
 
-    // this.keyboardUp$.subscribe(event => console.log(event));
-    // this.keyboardDown$.subscribe(event => console.log(event));
 
-    this.keyboardUpAndDown$ = merge(this.keyboardUp$, this.keyboardDown$);
+    this.keyboardUpAndDown$ = merge(keyboardUp$, keyboardDown$);
     this.keyboardUpAndDown$.subscribe(event => console.log(event));
 
   }
